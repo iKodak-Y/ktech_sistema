@@ -21,6 +21,8 @@ import java.util.ResourceBundle;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import javafx.geometry.Insets;
+import utils.ClaveAccesoGenerator;
+
 
 public class FacturacionController implements Initializable {
 
@@ -293,21 +295,18 @@ public class FacturacionController implements Initializable {
         return true;
     }
 
-    private Factura prepararFactura() {
+     private Factura prepararFactura() {
         Factura factura = new Factura();
         factura.setIdCliente(clienteSeleccionado.getIdCliente());
         factura.setFechaEmision(LocalDateTime.now());
         factura.setSubtotal(Double.parseDouble(lblSubtotal.getText()));
         factura.setIva(Double.parseDouble(lblIVA.getText()));
         factura.setTotal(Double.parseDouble(lblTotal.getText()));
-        factura.setEstado("EMITIDA");
-        factura.setDetalles(new ArrayList<>(detallesFactura));
-
-        // Configurar datos de facturación electrónica
+        factura.setEstado("Emitida");
         factura.setAmbiente("1"); // 1: Pruebas, 2: Producción
         factura.setTipoEmision("1"); // 1: Normal
-        factura.setClaveAcceso(generarClaveAcceso());
-
+        factura.setClaveAcceso(ClaveAccesoGenerator.generarClaveAcceso());
+        factura.setDetalles(new ArrayList<>(detallesFactura));
         return factura;
     }
 
