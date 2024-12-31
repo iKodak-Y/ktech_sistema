@@ -1,18 +1,36 @@
-<!-- src/Vista/Facturacion.fxml -->
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" 
       fx:controller="Controlador.FacturacionController"
       spacing="10" padding="15">
     
+    <!-- Sección de datos del cliente -->
+    <GridPane hgap="10" vgap="5">
+        <Label text="RUC/Cédula:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="txtIdentificacion" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Button text="Buscar" onAction="#buscarCliente" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+        
+        <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="txtNombre" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        
+        <Label text="Dirección:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="txtDireccion" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        
+        <Label text="Teléfono:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextField fx:id="txtTelefono" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    </GridPane>
+    
+    <!-- Sección de productos -->
     <HBox spacing="10">
-        <Label text="Cliente:"/>
-        <TextField fx:id="txtCliente"/>
-        <Button text="Buscar" onAction="#buscarCliente"/>
+        <Label text="Producto:"/>
+        <TextField fx:id="txtProducto" promptText="Código o nombre"/>
+        <Button text="Agregar" onAction="#agregarProducto"/>
     </HBox>
     
+    <!-- Tabla de detalles -->
     <TableView fx:id="tblDetalles" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn text="Código" fx:id="colCodigo"/>
@@ -22,19 +40,25 @@
             <TableColumn text="Subtotal" fx:id="colSubtotal"/>
             <TableColumn text="IVA" fx:id="colIVA"/>
             <TableColumn text="Total" fx:id="colTotal"/>
+            <TableColumn text="" fx:id="colAcciones"/>
         </columns>
     </TableView>
     
-    <HBox spacing="20" alignment="CENTER_RIGHT">
-        <Label text="Subtotal:"/>
-        <Label fx:id="lblSubtotal"/>
-        <Label text="IVA:"/>
-        <Label fx:id="lblIVA"/>
-        <Label text="Total:"/>
-        <Label fx:id="lblTotal"/>
-    </HBox>
+    <!-- Totales -->
+    <GridPane hgap="10" vgap="5" alignment="CENTER_RIGHT">
+        <Label text="Subtotal:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <Label fx:id="lblSubtotal" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        
+        <Label text="IVA (12%):" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <Label fx:id="lblIVA" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        
+        <Label text="Total:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <Label fx:id="lblTotal" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    </GridPane>
     
+    <!-- Botones de acción -->
     <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Vista Previa" onAction="#vistaPreviaFactura"/>
         <Button text="Emitir Factura" onAction="#emitirFactura"/>
         <Button text="Cancelar" onAction="#cancelar"/>
     </HBox>

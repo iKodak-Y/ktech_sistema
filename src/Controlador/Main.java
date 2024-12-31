@@ -7,6 +7,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import Controlador.SqlConection;
 import java.sql.Connection;
+import javafx.scene.control.Alert;
 
 /**
  *
@@ -45,7 +46,13 @@ public class Main extends Application {
             stage.setResizable(false);
             stage.show();
         } catch (Exception e) {
-            //hay un error
+            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
+            // Mostrar alerta al usuario
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Error al iniciar la aplicación: " + e.getMessage());
+            alert.showAndWait();
         }
     }
 }
