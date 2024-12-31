@@ -59,6 +59,7 @@ public class FacturacionController implements Initializable {
     private ProductoDAO productoDAO = new ProductoDAO();
     private Cliente clienteSeleccionado;
     private ObservableList<DetalleFactura> detallesFactura;
+    private ObservableList<String> productosObservableList;
     private ListView<String> listaProductos;
 
     @Override
@@ -115,7 +116,10 @@ public class FacturacionController implements Initializable {
 
         // Agregar el ListView debajo del campo de búsqueda
         GridPane gridProductos = (GridPane) txtBuscarProducto.getParent();
-        gridProductos.add(listaProductos, 1, 2); // Columna 1, Fila 2
+        GridPane.setColumnIndex(listaProductos, 1);
+        GridPane.setRowIndex(listaProductos, 2);
+        GridPane.setColumnSpan(listaProductos, 2);
+        gridProductos.getChildren().add(listaProductos);
 
         // Configurar el listener para actualizar la lista mientras se escribe
         txtBuscarProducto.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -123,12 +127,12 @@ public class FacturacionController implements Initializable {
                 listaProductos.setVisible(false);
             } else {
                 List<Producto> productos = productoDAO.buscarPorCodigoONombre(newValue);
-                ObservableList<String> items = FXCollections.observableArrayList();
+                productosObservableList = FXCollections.observableArrayList();
                 for (Producto producto : productos) {
-                    items.add(String.format("%s - %s", producto.getCodigo(), producto.getNombre()));
+                    productosObservableList.add(String.format("%s - %s", producto.getCodigo(), producto.getNombre()));
                 }
-                listaProductos.setItems(items);
-                listaProductos.setVisible(!items.isEmpty());
+                listaProductos.setItems(productosObservableList);
+                listaProductos.setVisible(!productosObservableList.isEmpty());
             }
         });
 
@@ -155,10 +159,10 @@ public class FacturacionController implements Initializable {
             if (cliente != null) {
                 clienteSeleccionado = cliente;
                 // Mostrar información del cliente
-                lblInfoCliente.setText(String.format("%s %s - %s", 
-                    cliente.getNombre(), 
-                    cliente.getApellido(), 
-                    cliente.getCedulaRUC()));
+                lblInfoCliente.setText(String.format("%s %s - %s",
+                        cliente.getNombre(),
+                        cliente.getApellido(),
+                        cliente.getCedulaRUC()));
                 lblInfoCliente.setVisible(true);
             } else {
                 mostrarError("Error", "Cliente no encontrado");
@@ -354,6 +358,19 @@ public class FacturacionController implements Initializable {
         }
 
         return digitoVerificador;
+    }
+
+    @FXML
+    private void buscarProducto() {
+        String termino = txtBuscarProducto.getText().trim();
+        if (!termino.isEmpty()) {
+            Producto producto = productoDAO.buscarUnoPorCodigoONombre(termino);
+            if (producto != null) {
+                mostrarDialogoCantidad(producto);
+            } else {
+                mostrarError("Error", "Producto no encontrado");
+            }
+        }
     }
 
     @FXML
