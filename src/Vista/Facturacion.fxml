@@ -39,23 +39,24 @@
             </GridPane>
             
             <!-- Sección Productos -->
-            <GridPane hgap="10.0" vgap="5.0">
-                <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
-                    <ColumnConstraints hgrow="SOMETIMES"/>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
-                </columnConstraints>
-                <rowConstraints>
-                    <RowConstraints minHeight="30.0" prefHeight="30.0"/>
-                    <RowConstraints minHeight="100.0" prefHeight="100.0"/>
-                </rowConstraints>
-                <children>
-                    <Label text="Producto:"/>
-                    <TextField fx:id="txtBuscarProducto" promptText="Ingrese código o nombre del producto" GridPane.columnIndex="1"/>
-                    <Button onAction="#buscarProducto" text="Agregar Producto" GridPane.columnIndex="2"/>
-                    <ListView fx:id="listaProductos" GridPane.columnIndex="1" GridPane.rowIndex="1" visible="false"/>
-                </children>
-            </GridPane>
+            <VBox spacing="10.0">
+                <GridPane hgap="10.0" vgap="5.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="30.0" prefHeight="30.0"/>
+                    </rowConstraints>
+                    <children>
+                        <Label text="Producto:"/>
+                        <TextField fx:id="txtBuscarProducto" promptText="Ingrese código o nombre del producto" GridPane.columnIndex="1"/>
+                        <Button onAction="#buscarProducto" text="Agregar Producto" GridPane.columnIndex="2"/>
+                    </children>
+                </GridPane>
+                <ListView fx:id="listaProductos" prefHeight="100.0" visible="false"/>
+            </VBox>
             
             <!-- Tabla de Detalles -->
             <TableView fx:id="tblDetalles" VBox.vgrow="ALWAYS">
