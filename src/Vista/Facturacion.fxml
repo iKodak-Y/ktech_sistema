@@ -1,0 +1,42 @@
+<!-- src/Vista/Facturacion.fxml -->
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="Controlador.FacturacionController"
+      spacing="10" padding="15">
+    
+    <HBox spacing="10">
+        <Label text="Cliente:"/>
+        <TextField fx:id="txtCliente"/>
+        <Button text="Buscar" onAction="#buscarCliente"/>
+    </HBox>
+    
+    <TableView fx:id="tblDetalles" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="Código" fx:id="colCodigo"/>
+            <TableColumn text="Descripción" fx:id="colDescripcion"/>
+            <TableColumn text="Cantidad" fx:id="colCantidad"/>
+            <TableColumn text="Precio" fx:id="colPrecio"/>
+            <TableColumn text="Subtotal" fx:id="colSubtotal"/>
+            <TableColumn text="IVA" fx:id="colIVA"/>
+            <TableColumn text="Total" fx:id="colTotal"/>
+        </columns>
+    </TableView>
+    
+    <HBox spacing="20" alignment="CENTER_RIGHT">
+        <Label text="Subtotal:"/>
+        <Label fx:id="lblSubtotal"/>
+        <Label text="IVA:"/>
+        <Label fx:id="lblIVA"/>
+        <Label text="Total:"/>
+        <Label fx:id="lblTotal"/>
+    </HBox>
+    
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Emitir Factura" onAction="#emitirFactura"/>
+        <Button text="Cancelar" onAction="#cancelar"/>
+    </HBox>
+    
+</VBox>
