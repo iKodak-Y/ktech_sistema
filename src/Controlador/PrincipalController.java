@@ -88,6 +88,28 @@ public class PrincipalController implements Initializable {
 
     @FXML
     private void acc_facturacion(ActionEvent event) {
+        try {
+            String formulario = "/Vista/Facturacion.fxml";
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(formulario));
+            Parent root = loader.load();
+
+            FacturacionController controlador = loader.getController();
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+
+            stage.setResizable(false);
+            stage.show();
+
+            Stage myStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            if (myStage != null) {
+                myStage.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
     }
 

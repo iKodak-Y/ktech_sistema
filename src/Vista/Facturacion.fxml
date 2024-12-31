@@ -1,66 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" 
-      fx:controller="Controlador.FacturacionController"
-      spacing="10" padding="15">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.FacturacionController">
+    <children>
+        <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <padding>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+            </padding>
+            
+            <!-- Título -->
+            <Label text="Facturación" styleClass="title-label">
+                <font>
+                    <Font name="System Bold" size="24.0"/>
+                </font>
+            </Label>
+            
+            <!-- Sección Cliente -->
+            <GridPane hgap="10.0" vgap="5.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="30.0" prefHeight="30.0"/>
+                </rowConstraints>
+                <children>
+                    <Label text="Cliente:"/>
+                    <TextField fx:id="txtCliente" promptText="Ingrese cédula/RUC o nombre" GridPane.columnIndex="1"/>
+                    <Button onAction="#buscarCliente" text="Buscar Cliente" GridPane.columnIndex="2"/>
+                </children>
+            </GridPane>
+            
+            <!-- Sección Productos -->
+            <GridPane hgap="10.0" vgap="5.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="30.0" prefHeight="30.0"/>
+                </rowConstraints>
+                <children>
+                    <Label text="Producto:"/>
+                    <TextField fx:id="txtBuscarProducto" promptText="Ingrese código o nombre del producto" GridPane.columnIndex="1"/>
+                    <Button onAction="#buscarProducto" text="Agregar Producto" GridPane.columnIndex="2"/>
+                </children>
+            </GridPane>
+            
+            <!-- Tabla de Detalles -->
+            <TableView fx:id="tblDetalles" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colCodigo" text="Código" prefWidth="100.0"/>
+                    <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="200.0"/>
+                    <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="80.0"/>
+                    <TableColumn fx:id="colPrecio" text="Precio Unit." prefWidth="100.0"/>
+                    <TableColumn fx:id="colSubtotal" text="Subtotal" prefWidth="100.0"/>
+                    <TableColumn fx:id="colIVA" text="IVA" prefWidth="80.0"/>
+                    <TableColumn fx:id="colTotal" text="Total" prefWidth="100.0"/>
+                </columns>
+            </TableView>
+            
+            <!-- Sección Totales -->
+            <GridPane hgap="10.0" vgap="5.0" alignment="CENTER_RIGHT">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="25.0" prefHeight="25.0"/>
+                    <RowConstraints minHeight="25.0" prefHeight="25.0"/>
+                    <RowConstraints minHeight="25.0" prefHeight="25.0"/>
+                </rowConstraints>
+                <children>
+                    <Label text="Subtotal:" GridPane.rowIndex="0"/>
+                    <Label fx:id="lblSubtotal" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label text="IVA:" GridPane.rowIndex="1"/>
+                    <Label fx:id="lblIVA" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Label text="Total:" GridPane.rowIndex="2"/>
+                    <Label fx:id="lblTotal" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                </children>
+            </GridPane>
+            
+            <!-- Botones de Acción -->
+            <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                <Button onAction="#emitirFactura" text="Emitir Factura" styleClass="button-primary">
+                    <font>
+                        <Font name="System Bold" size="14.0"/>
+                    </font>
+                </Button>
+                <Button onAction="#cancelar" text="Cancelar"/>
+                <Button onAction="#cerrar" text="Cerrar"/>
+            </HBox>
+        </VBox>
+    </children>
     
-    <!-- Sección de datos del cliente -->
-    <GridPane hgap="10" vgap="5">
-        <Label text="RUC/Cédula:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <TextField fx:id="txtIdentificacion" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-        <Button text="Buscar" onAction="#buscarCliente" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-        
-        <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <TextField fx:id="txtNombre" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-        
-        <Label text="Dirección:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <TextField fx:id="txtDireccion" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-        
-        <Label text="Teléfono:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <TextField fx:id="txtTelefono" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-    </GridPane>
-    
-    <!-- Sección de productos -->
-    <HBox spacing="10">
-        <Label text="Producto:"/>
-        <TextField fx:id="txtProducto" promptText="Código o nombre"/>
-        <Button text="Agregar" onAction="#agregarProducto"/>
-    </HBox>
-    
-    <!-- Tabla de detalles -->
-    <TableView fx:id="tblDetalles" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn text="Código" fx:id="colCodigo"/>
-            <TableColumn text="Descripción" fx:id="colDescripcion"/>
-            <TableColumn text="Cantidad" fx:id="colCantidad"/>
-            <TableColumn text="Precio" fx:id="colPrecio"/>
-            <TableColumn text="Subtotal" fx:id="colSubtotal"/>
-            <TableColumn text="IVA" fx:id="colIVA"/>
-            <TableColumn text="Total" fx:id="colTotal"/>
-            <TableColumn text="" fx:id="colAcciones"/>
-        </columns>
-    </TableView>
-    
-    <!-- Totales -->
-    <GridPane hgap="10" vgap="5" alignment="CENTER_RIGHT">
-        <Label text="Subtotal:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <Label fx:id="lblSubtotal" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-        
-        <Label text="IVA (12%):" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <Label fx:id="lblIVA" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-        
-        <Label text="Total:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <Label fx:id="lblTotal" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-    </GridPane>
-    
-    <!-- Botones de acción -->
-    <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Vista Previa" onAction="#vistaPreviaFactura"/>
-        <Button text="Emitir Factura" onAction="#emitirFactura"/>
-        <Button text="Cancelar" onAction="#cancelar"/>
-    </HBox>
-    
-</VBox>
+    <stylesheets>
+        <URL value="@../styles/styles.css"/>
+    </stylesheets>
+</AnchorPane>
