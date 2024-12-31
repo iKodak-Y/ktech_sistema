@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import java.net.URL?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.FacturacionController">
     <children>
@@ -33,6 +34,7 @@
                     <Label text="Cliente:"/>
                     <TextField fx:id="txtCliente" promptText="Ingrese cédula/RUC o nombre" GridPane.columnIndex="1"/>
                     <Button onAction="#buscarCliente" text="Buscar Cliente" GridPane.columnIndex="2"/>
+                    <Label fx:id="lblInfoCliente" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #2196F3;"/>
                 </children>
             </GridPane>
             
@@ -45,11 +47,13 @@
                 </columnConstraints>
                 <rowConstraints>
                     <RowConstraints minHeight="30.0" prefHeight="30.0"/>
+                    <RowConstraints minHeight="100.0" prefHeight="100.0"/>
                 </rowConstraints>
                 <children>
                     <Label text="Producto:"/>
                     <TextField fx:id="txtBuscarProducto" promptText="Ingrese código o nombre del producto" GridPane.columnIndex="1"/>
                     <Button onAction="#buscarProducto" text="Agregar Producto" GridPane.columnIndex="2"/>
+                    <ListView fx:id="listaProductos" GridPane.columnIndex="1" GridPane.rowIndex="1" visible="false"/>
                 </children>
             </GridPane>
             

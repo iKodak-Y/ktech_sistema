@@ -3,6 +3,7 @@ package Controlador;
 import Modelo.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
@@ -17,6 +18,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
+import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
+import javafx.geometry.Insets;
+import javafx.scene.input.KeyEvent;
 
 public class FacturacionController implements Initializable {
 
@@ -46,16 +51,20 @@ public class FacturacionController implements Initializable {
     private Label lblIVA;
     @FXML
     private Label lblTotal;
+    @FXML
+    private Label lblInfoCliente;
 
     private FacturaDAO facturaDAO = new FacturaDAO();
     private ClienteDAO clienteDAO = new ClienteDAO();
     private ProductoDAO productoDAO = new ProductoDAO();
     private Cliente clienteSeleccionado;
     private ObservableList<DetalleFactura> detallesFactura;
+    private ListView<String> listaProductos;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
+        configurarListaProductos();
         detallesFactura = FXCollections.observableArrayList();
         tblDetalles.setItems(detallesFactura);
 
@@ -98,6 +107,46 @@ public class FacturacionController implements Initializable {
         tblDetalles.getColumns().add(colAcciones);
     }
 
+    private void configurarListaProductos() {
+        // Crear y configurar el ListView
+        listaProductos = new ListView<>();
+        listaProductos.setPrefHeight(100);
+        listaProductos.setVisible(false);
+
+        // Agregar el ListView debajo del campo de búsqueda
+        GridPane gridProductos = (GridPane) txtBuscarProducto.getParent();
+        gridProductos.add(listaProductos, 1, 2); // Columna 1, Fila 2
+
+        // Configurar el listener para actualizar la lista mientras se escribe
+        txtBuscarProducto.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.trim().isEmpty()) {
+                listaProductos.setVisible(false);
+            } else {
+                List<Producto> productos = productoDAO.buscarPorCodigoONombre(newValue);
+                ObservableList<String> items = FXCollections.observableArrayList();
+                for (Producto producto : productos) {
+                    items.add(String.format("%s - %s", producto.getCodigo(), producto.getNombre()));
+                }
+                listaProductos.setItems(items);
+                listaProductos.setVisible(!items.isEmpty());
+            }
+        });
+
+        // Configurar la selección de producto
+        listaProductos.setOnMouseClicked(event -> {
+            String seleccion = listaProductos.getSelectionModel().getSelectedItem();
+            if (seleccion != null) {
+                String codigo = seleccion.split(" - ")[0];
+                Producto producto = productoDAO.buscarPorCodigo(codigo);
+                if (producto != null) {
+                    mostrarDialogoCantidad(producto);
+                    listaProductos.setVisible(false);
+                    txtBuscarProducto.clear();
+                }
+            }
+        });
+    }
+
     @FXML
     private void buscarCliente() {
         String identificacion = txtCliente.getText().trim();
@@ -105,57 +154,89 @@ public class FacturacionController implements Initializable {
             Cliente cliente = clienteDAO.buscarPorCedulaONombre(identificacion);
             if (cliente != null) {
                 clienteSeleccionado = cliente;
-                mostrarMensaje("Cliente encontrado", "Se ha seleccionado al cliente: " + cliente.getNombre());
+                // Mostrar información del cliente
+                lblInfoCliente.setText(String.format("%s %s - %s", 
+                    cliente.getNombre(), 
+                    cliente.getApellido(), 
+                    cliente.getCedulaRUC()));
+                lblInfoCliente.setVisible(true);
             } else {
                 mostrarError("Error", "Cliente no encontrado");
                 clienteSeleccionado = null;
-            }
-        }
-    }
-
-    @FXML
-    private void buscarProducto() {
-        String termino = txtBuscarProducto.getText().trim();
-        if (!termino.isEmpty()) {
-            Producto producto = productoDAO.buscarUnoPorCodigoONombre(termino);
-            if (producto != null) {
-                mostrarDialogoCantidad(producto);
-            } else {
-                mostrarError("Error", "Producto no encontrado");
+                lblInfoCliente.setVisible(false);
             }
         }
     }
 
     private void mostrarDialogoCantidad(Producto producto) {
-        TextInputDialog dialog = new TextInputDialog("1");
-        dialog.setTitle("Cantidad");
-        dialog.setHeaderText("Ingrese la cantidad para " + producto.getNombre());
-        dialog.setContentText("Cantidad:");
+        Dialog<Pair<Integer, Double>> dialog = new Dialog<>();
+        dialog.setTitle("Agregar Producto");
+        dialog.setHeaderText("Producto: " + producto.getNombre());
 
-        dialog.showAndWait().ifPresent(cantidadStr -> {
-            try {
-                int cantidad = Integer.parseInt(cantidadStr);
-                if (cantidad > 0 && cantidad <= producto.getStockActual()) {
-                    agregarProductoADetalle(producto, cantidad);
-                } else {
-                    mostrarError("Error", "Cantidad no válida o stock insuficiente");
+        // Botones
+        ButtonType buttonTypeOk = new ButtonType("Aceptar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(buttonTypeOk, ButtonType.CANCEL);
+
+        // Crear grid para campos
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField cantidadField = new TextField("1");
+        TextField precioField = new TextField(String.format("%.2f", producto.getPvp()));
+
+        grid.add(new Label("Cantidad:"), 0, 0);
+        grid.add(cantidadField, 1, 0);
+        grid.add(new Label("Precio Unitario:"), 0, 1);
+        grid.add(precioField, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Convertir el resultado
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == buttonTypeOk) {
+                try {
+                    int cantidad = Integer.parseInt(cantidadField.getText());
+                    double precio = Double.parseDouble(precioField.getText());
+                    if (cantidad > 0 && precio >= 0) {
+                        return new Pair<>(cantidad, precio);
+                    }
+                } catch (NumberFormatException e) {
+                    // Error de conversión
                 }
-            } catch (NumberFormatException e) {
-                mostrarError("Error", "Por favor ingrese un número válido");
             }
+            return null;
+        });
+
+        Optional<Pair<Integer, Double>> result = dialog.showAndWait();
+        result.ifPresent(cantidadPrecio -> {
+            agregarProductoADetalle(producto, cantidadPrecio.getKey(), cantidadPrecio.getValue());
         });
     }
 
-    private void agregarProductoADetalle(Producto producto, int cantidad) {
+    private void agregarProductoADetalle(Producto producto, int cantidad, double precioUnitario) {
         DetalleFactura detalle = new DetalleFactura(
                 producto.getId(),
                 producto.getCodigo(),
                 producto.getNombre(),
                 cantidad,
-                producto.getPvp()
+                precioUnitario
         );
+
+        // Calcular subtotal
+        double subtotal = cantidad * precioUnitario;
+        detalle.setSubtotal(subtotal);
+
+        // Calcular IVA (usando el valor de la base de datos, ej: 0.15 para 15%)
+        double iva = subtotal * producto.getIva();
+        detalle.setIva(iva);
+
+        // Calcular total
+        detalle.setTotal(subtotal + iva);
+
         detallesFactura.add(detalle);
-        txtBuscarProducto.clear();
+        calcularTotales();
     }
 
     private void calcularTotales() {
@@ -281,6 +362,7 @@ public class FacturacionController implements Initializable {
         txtBuscarProducto.clear();
         detallesFactura.clear();
         clienteSeleccionado = null;
+        lblInfoCliente.setText("");
         lblSubtotal.setText("0.00");
         lblIVA.setText("0.00");
         lblTotal.setText("0.00");
