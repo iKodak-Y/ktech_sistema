@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" prefHeight="301.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.PrincipalController">
+    <children>
+        <GridPane prefHeight="330.0" prefWidth="600.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="85.00000610351563" minHeight="10.0" prefHeight="80.19998779296876" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="257.00000610351566" minHeight="10.0" prefHeight="190.60001220703126" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="129.20000610351565" minHeight="10.0" prefHeight="61.20000610351559" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Pane prefHeight="200.0" prefWidth="200.0">
+                    <children>
+                        <Text layoutX="240.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="K-TECH" textAlignment="CENTER" wrappingWidth="119.8551025390625">
+                            <font>
+                                <Font size="33.0" />
+                            </font>
+                        </Text>
+                        <ImageView fitHeight="56.0" fitWidth="58.0" layoutX="164.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../../../Pictures/Logo%20K%20HD%20Dark.png" />
+                            </image>
+                        </ImageView>
+                    </children>
+                </Pane>
+                <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                    <children>
+                        <Button fx:id="btn_clientes" layoutX="93.0" layoutY="110.0" mnemonicParsing="false" onAction="#acc_clientes" prefHeight="41.0" prefWidth="137.0" text="Gestión de Clientes" />
+                        <Button fx:id="btn_productos" layoutX="93.0" layoutY="44.0" mnemonicParsing="false" onAction="#acc_productos" prefHeight="41.0" prefWidth="137.0" text="Gestión de Productos" />
+                        <Button fx:id="btn_reportes" layoutX="363.0" layoutY="131.0" mnemonicParsing="false" onAction="#acc_reportes" prefHeight="41.0" prefWidth="137.0" text="Reportes" />
+                        <Button fx:id="btn_facturacion" layoutX="363.0" layoutY="76.0" mnemonicParsing="false" onAction="#acc_facturacion" prefHeight="41.0" prefWidth="137.0" text="Facturación" />
+                        <Button fx:id="btn_venta" layoutX="364.0" layoutY="21.0" mnemonicParsing="false" onAction="#acc_venta" prefHeight="41.0" prefWidth="137.0" text="Ticket Venta" />
+                    </children>
+                </Pane>
+                <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                    <children>
+                        <Button fx:id="btn_cerrar" layoutX="276.0" layoutY="17.0" mnemonicParsing="false" onAction="#acc_cerrar" prefHeight="27.0" prefWidth="49.0" text="Salir" />
+                    </children>
+                </Pane>
+            </children>
+        </GridPane>
+    </children>
+</AnchorPane>

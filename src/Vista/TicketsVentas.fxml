@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.TicketsVentasController">
+    <children>
+        <VBox prefHeight="700.0" prefWidth="708.0" spacing="10.0">
+         <Pane prefHeight="700.0" prefWidth="754.0">
+            <children>
+                  <!-- Title -->
+                  <Pane prefHeight="42.0" prefWidth="708.0">
+                      <children>
+                          <Label layoutX="201.0" layoutY="11.0" text="Sistema de Tickets de Ventas">
+                              <font>
+                                  <Font size="24.0" />
+                              </font>
+                          </Label>
+                      </children>
+                  </Pane>
+      
+                              <!-- Customer Selection -->
+                  <HBox layoutX="30.0" layoutY="60.0" prefHeight="26.0" prefWidth="393.0" spacing="15.0">
+                      <children>
+                          <Label text="Seleccionar Cliente:" />
+                          <RadioButton fx:id="radioConsumidorFinal" selected="true" text="Consumidor Final" />
+                          <RadioButton fx:id="radioConDatos" text="Con Datos" />
+                      </children>
+                  </HBox>
+      
+                              <!-- Customer Data Box -->
+                  <VBox fx:id="clienteBox" layoutX="370.0" layoutY="95.0" spacing="5.0" visible="false">
+                      <children>
+                          <HBox spacing="10.0">
+                              <children>
+                                  <Label text="Buscar Cédula:" />
+                                  <TextField fx:id="txt_cliente_id" promptText="Ingrese cédula" />
+                                  <Button onAction="#acc_buscar_cliente" text="Buscar" />
+                              </children>
+                          </HBox>
+                          <GridPane hgap="10.0" vgap="5.0">
+                              <children>
+                                  <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                  <TextField fx:id="txtNombreCliente" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                  <Label text="Apellido:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                  <TextField fx:id="txtApellidoCliente" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                  <Label text="Teléfono:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                  <TextField fx:id="txtTelefonoCliente" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                  <Label text="Dirección:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                  <TextField fx:id="txtDireccionCliente" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              </children>
+                              <columnConstraints>
+                                  <ColumnConstraints />
+                                  <ColumnConstraints />
+                              </columnConstraints>
+                              <rowConstraints>
+                                  <RowConstraints />
+                                  <RowConstraints />
+                                  <RowConstraints />
+                                  <RowConstraints />
+                              </rowConstraints>
+                          </GridPane>
+                      </children>
+                  </VBox>
+      
+                              <!-- Product Data Box -->
+                  <VBox layoutX="30.0" layoutY="95.0" spacing="5.0">
+                      <children>
+                          <HBox spacing="10.0">
+                              <children>
+                                  <Label text="Buscar Producto:" />
+                                  <TextField fx:id="txt_buscar_producto" promptText="Código o Nombre" />
+                                  <Button onAction="#acc_buscar_producto" text="Buscar" />
+                              </children>
+                          </HBox>
+                          <GridPane hgap="10.0" vgap="5.0">
+                              <children>
+                                  <Label text="Código:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                  <TextField fx:id="txt_producto_id" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                  <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                  <TextField fx:id="txtNombreProducto" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                  <Label text="Precio Unitario:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                  <TextField fx:id="txtPrecioUnitario" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                  <Label text="Cantidad:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                  <TextField fx:id="txt_cantidad" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              </children>
+                              <columnConstraints>
+                                  <ColumnConstraints maxWidth="92.8" minWidth="82.40000610351562" prefWidth="86.40000610351562" />
+                                  <ColumnConstraints maxWidth="147.9999938964844" minWidth="137.60000000000002" prefWidth="143.9999938964844" />
+                              </columnConstraints>
+                              <rowConstraints>
+                                  <RowConstraints />
+                                  <RowConstraints />
+                                  <RowConstraints />
+                                  <RowConstraints />
+                              </rowConstraints>
+                          </GridPane>
+                          <Button onAction="#acc_agregar_producto" text="Agregar Producto">
+                        <VBox.margin>
+                           <Insets top="10.0" />
+                        </VBox.margin>
+                     </Button>
+                      </children>
+                  </VBox>
+      
+                              <!-- Payment Method Selection -->
+                  <HBox layoutX="30.0" layoutY="291.0" spacing="10.0">
+                      <children>
+                          <Label text="Método de Pago:" />
+                          <ComboBox fx:id="cmb_metodo_pago" prefHeight="26.0" prefWidth="139.0" />
+                      </children>
+                  <padding>
+                     <Insets top="10.0" />
+                  </padding>
+                  </HBox>
+      
+                              <!-- Sales Detail Table -->
+                  <Pane layoutY="338.0" prefHeight="363.0" prefWidth="708.0">
+                      <children>
+                          <TableView fx:id="tbl_detalle_venta" layoutX="14.0" layoutY="16.0" prefHeight="273.0" prefWidth="678.0">
+                              <columns>
+                                  <TableColumn fx:id="colCodigo" text="Código" />
+                                  <TableColumn fx:id="col_producto" prefWidth="135.1999740600586" text="Nombre" />
+                                  <TableColumn fx:id="col_cantidad" prefWidth="78.4000244140625" text="Cantidad" />
+                                  <TableColumn fx:id="col_precio" prefWidth="108.79998779296875" text="Precio Unitario" />
+                                  <TableColumn fx:id="col_total" prefWidth="84.0" text="Subtotal" />
+                              </columns>
+                          </TableView>
+                          <HBox layoutX="20.0" layoutY="300.0" spacing="10.0">
+                              <children>
+                                  <Label text="Total:" />
+                                  <TextField fx:id="txt_total" editable="false" />
+                                  <Button onAction="#acc_registrar_venta" text="Finalizar Venta" />
+                              </children>
+                          </HBox>
+                     <Button fx:id="btn_cerrar" layoutX="602.0" layoutY="300.0" mnemonicParsing="false" onAction="#acc_cerrar" prefHeight="26.0" prefWidth="68.0" text="Cerrar" />
+                      </children>
+                  </Pane>
+            </children>
+         </Pane>
+        </VBox>
+    </children>
+</AnchorPane>

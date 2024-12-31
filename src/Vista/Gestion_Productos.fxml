@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="587.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.Gestion_ProductosController">
+   <children>
+      <GridPane prefHeight="587.0" prefWidth="760.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="76.60001220703126" minHeight="10.0" prefHeight="42.99999084472656" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="380.4000129699707" minHeight="10.0" prefHeight="240.00000610351566" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="355.99999389648434" minHeight="0.0" prefHeight="304.79999389648435" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Pane prefHeight="232.0" prefWidth="760.0" GridPane.rowIndex="1">
+               <children>
+                  <HBox layoutX="32.0" layoutY="58.0" prefHeight="177.0" prefWidth="690.0">
+                     <children>
+                        <VBox prefHeight="224.0" prefWidth="189.0" spacing="20.0">
+                           <children>
+                              <Label text="Código del producto" />
+                              <Label text="Nombre del producto" />
+                              <Label text="Precio de compra" />
+                              <Label text="Precio de venta al público (PVP)" />
+                              <Label text="Categoría" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="178.0" prefWidth="170.0" spacing="10.0">
+                           <children>
+                              <TextField fx:id="txt_codigo" />
+                              <TextField fx:id="txt_nombre">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </TextField>
+                              <TextField fx:id="txt_precio" />
+                              <TextField fx:id="txt_pvp" />
+                              <ComboBox fx:id="cmb_categoria" prefHeight="26.0" prefWidth="175.0" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="178.0" prefWidth="123.0" spacing="20.0">
+                           <children>
+                              <Label text="Stock inicial" />
+                              <Label text="IVA" />
+                              <Label text="Estado" />
+                              <Label text="Stock Actual:" />
+                           </children>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox prefHeight="136.0" prefWidth="170.0" spacing="10.0">
+                           <children>
+                              <TextField fx:id="txt_stock_inicial" />
+                              <TextField fx:id="txt_iva" />
+                              <TextField fx:id="txt_estado" />
+                              <TextField fx:id="txt_stock_actual" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Button fx:id="btn_guardar" layoutX="417.0" layoutY="201.0" mnemonicParsing="false" onAction="#acc_guardar" prefHeight="32.0" prefWidth="79.0" text="Guardar" />
+                  <Button fx:id="btn_eliminar" layoutX="515.0" layoutY="201.0" mnemonicParsing="false" onAction="#acc_eliminar" prefHeight="32.0" prefWidth="79.0" text="Eliminar" />
+                  <Label layoutX="176.0" layoutY="20.0" text="Buscar Producto:" />
+                  <TextField fx:id="txt_buscar_producto" layoutX="282.0" layoutY="17.0" prefHeight="25.0" prefWidth="215.0" />
+                  <Button fx:id="btn_buscar" layoutX="515.0" layoutY="14.0" mnemonicParsing="false" onAction="#acc_buscar" prefHeight="32.0" prefWidth="79.0" text="Buscar" />
+                  <Button fx:id="btn_limpiar" layoutX="613.0" layoutY="14.0" mnemonicParsing="false" onAction="#acc_limpiar" prefHeight="32.0" prefWidth="79.0" text="Limpiar" />
+                  <Button fx:id="btn_cerrar" layoutX="613.0" layoutY="202.0" mnemonicParsing="false" onAction="#acc_cerrar" prefHeight="32.0" prefWidth="79.0" text="Cerrar" />
+                  <Button fx:id="btn_categoria" layoutX="32.0" layoutY="13.0" mnemonicParsing="false" onAction="#acc_categoria" prefHeight="32.0" prefWidth="123.0" text="Agregar Categoria" />
+               </children>
+            </Pane>
+            <Pane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="276.0" layoutY="10.0" text="Gestión de Productos">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+               <children>
+                  <TableView fx:id="tbl_productos" layoutX="14.0" layoutY="16.0" prefHeight="273.0" prefWidth="733.0">
+                   <columns>
+                     <TableColumn fx:id="col_codigo" prefWidth="82.4000244140625" text="Código" />
+                     <TableColumn fx:id="col_nombre" prefWidth="147.20001220703125" text="Nombre" />
+                     <TableColumn fx:id="col_precio" prefWidth="101.5999755859375" text="Precio" />
+                     <TableColumn fx:id="col_pvp" prefWidth="99.20001220703125" text="P.V.P" />
+                     <TableColumn fx:id="col_stock_actual" prefWidth="124.0" text="Stock actual" />
+                     <TableColumn fx:id="col_iva" maxWidth="125.59991455078125" prefWidth="87.20001220703125" text="IVA" />
+                     <TableColumn fx:id="col_estado" prefWidth="89.60003662109375" text="Estado" />
+                   </columns>
+                  </TableView>
+               </children>
+            </Pane>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
