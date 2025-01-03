@@ -1,7 +1,7 @@
 package Controlador;
 
 import Modelo.*;
-import java.awt.Insets;
+import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
