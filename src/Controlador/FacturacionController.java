@@ -1,28 +1,28 @@
 package Controlador;
 
 import Modelo.*;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import javafx.stage.Stage;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.fxml.FXMLLoader;
+import java.awt.Insets;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import java.net.URL;
-import java.time.LocalDateTime;
-import java.util.ResourceBundle;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import javafx.util.Pair;
-import javafx.geometry.Insets;
 import utils.ClaveAccesoGenerator;
 
+import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
 public class FacturacionController implements Initializable {
 
@@ -164,19 +164,6 @@ public class FacturacionController implements Initializable {
         }
     }
 
-    @FXML
-    private void buscarProducto() {
-        String termino = txtBuscarProducto.getText().trim();
-        if (!termino.isEmpty()) {
-            Producto producto = productoDAO.buscarUnoPorCodigoONombre(termino);
-            if (producto != null) {
-                mostrarDialogoCantidad(producto);
-            } else {
-                mostrarError("Error", "Producto no encontrado");
-            }
-        }
-    }
-
     private void mostrarDialogoCantidad(Producto producto) {
         Dialog<Pair<Integer, Double>> dialog = new Dialog<>();
         dialog.setTitle("Agregar Producto");
@@ -191,7 +178,7 @@ public class FacturacionController implements Initializable {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
-
+        
         TextField cantidadField = new TextField("1");
         TextField precioField = new TextField(String.format("%.2f", producto.getPvp()));
 
@@ -295,7 +282,7 @@ public class FacturacionController implements Initializable {
         return true;
     }
 
-     private Factura prepararFactura() {
+    private Factura prepararFactura() {
         Factura factura = new Factura();
         factura.setIdCliente(clienteSeleccionado.getIdCliente());
         factura.setFechaEmision(LocalDateTime.now());
@@ -306,60 +293,16 @@ public class FacturacionController implements Initializable {
         factura.setAmbiente("1"); // 1: Pruebas, 2: Producción
         factura.setTipoEmision("1"); // 1: Normal
         factura.setClaveAcceso(ClaveAccesoGenerator.generarClaveAcceso());
+        factura.setNumeroFactura(generarNumeroFactura());
         factura.setDetalles(new ArrayList<>(detallesFactura));
         return factura;
     }
 
-    private String generarClaveAcceso() {
+    private String generarNumeroFactura() {
         LocalDateTime now = LocalDateTime.now();
-        String fecha = now.format(DateTimeFormatter.ofPattern("ddMMyyyy"));
-        String tipoComprobante = "01"; // 01 para facturas
-        String rucEmisor = "1234567890001"; // Debe venir de la configuración
-        String ambiente = "1"; // 1: Pruebas, 2: Producción
-        String serie = "001001"; // Establecimiento + Punto Emisión
-        String secuencial = String.format("%09d", obtenerSecuencial());
-        String codigoNumerico = "12345678"; // 8 dígitos
-        String tipoEmision = "1"; // 1: Normal
-
-        String claveAcceso = fecha
-                + tipoComprobante
-                + rucEmisor
-                + ambiente
-                + serie
-                + secuencial
-                + codigoNumerico
-                + tipoEmision;
-
-        // Agregar dígito verificador
-        int digitoVerificador = calcularDigitoVerificador(claveAcceso);
-        return claveAcceso + digitoVerificador;
-    }
-
-    private int obtenerSecuencial() {
-        // Implementar lógica para obtener el siguiente secuencial
-        // Por ahora retornamos un valor de prueba
-        return 1;
-    }
-
-    private int calcularDigitoVerificador(String claveAcceso) {
-        int[] coeficientes = {2, 3, 4, 5, 6, 7};
-        int suma = 0;
-        int indiceCoeficiente = 0;
-
-        for (int i = claveAcceso.length() - 1; i >= 0; i--) {
-            int digito = Character.getNumericValue(claveAcceso.charAt(i));
-            suma += digito * coeficientes[indiceCoeficiente % 6];
-            indiceCoeficiente++;
-        }
-
-        int digitoVerificador = 11 - (suma % 11);
-        if (digitoVerificador == 11) {
-            digitoVerificador = 0;
-        } else if (digitoVerificador == 10) {
-            digitoVerificador = 1;
-        }
-
-        return digitoVerificador;
+        String fecha = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        int secuencial = ClaveAccesoGenerator.obtenerSecuencial();
+        return fecha + String.format("%06d", secuencial);
     }
 
     @FXML

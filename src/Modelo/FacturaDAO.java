@@ -1,85 +1,98 @@
 package Modelo;
 
-import Controlador.SqlConection;
-import java.sql.*;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
+import utils.Database;
 
 public class FacturaDAO {
+
     public boolean guardar(Factura factura) {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet generatedKeys = null;
-        
+        Connection conn = null;
+        PreparedStatement pstmtFactura = null;
+        PreparedStatement pstmtDetalle = null;
+
+        String sqlFactura = "INSERT INTO Facturas (ClaveAcceso, NumeroFactura, FechaEmision, IDCliente, Total, Subtotal, IVA, Estado, Ambiente, TipoEmision) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlDetalle = "INSERT INTO DetalleFactura (IDFactura, IDProducto, Cantidad, PrecioUnitario, Subtotal, IVA, Total) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
         try {
-            con = new SqlConection().getConexion();
-            con.setAutoCommit(false);
-            
-            // Insertar factura
-            String sqlFactura = "INSERT INTO Facturas (ClaveAcceso, NumeroFactura, FechaEmision, " +
-                              "IdCliente, Total, Subtotal, IVA, Estado, NumeroAutorizacion, " +
-                              "IdPuntoEmision, Ambiente, TipoEmision, XmlFirmado, XmlAutorizado) " +
-                              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            
-            pstmt = con.prepareStatement(sqlFactura, Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1, factura.getClaveAcceso());
-            pstmt.setString(2, factura.getNumeroFactura());
-            pstmt.setTimestamp(3, Timestamp.valueOf(factura.getFechaEmision()));
-            pstmt.setInt(4, factura.getIdCliente());
-            pstmt.setDouble(5, factura.getTotal());
-            pstmt.setDouble(6, factura.getSubtotal());
-            pstmt.setDouble(7, factura.getIva());
-            pstmt.setString(8, factura.getEstado());
-            pstmt.setString(9, factura.getNumeroAutorizacion());
-            pstmt.setInt(10, factura.getIdPuntoEmision());
-            pstmt.setString(11, factura.getAmbiente());
-            pstmt.setString(12, factura.getTipoEmision());
-            pstmt.setString(13, factura.getXmlFirmado());
-            pstmt.setString(14, factura.getXmlAutorizado());
-            
-            pstmt.executeUpdate();
-            
-            // Obtener el ID generado para la factura
-            generatedKeys = pstmt.getGeneratedKeys();
-            int facturaId = -1;
-            if (generatedKeys.next()) {
-                facturaId = generatedKeys.getInt(1);
+            conn = Database.getConnection();
+            conn.setAutoCommit(false);
+
+            // Guardar factura
+            pstmtFactura = conn.prepareStatement(sqlFactura, PreparedStatement.RETURN_GENERATED_KEYS);
+            pstmtFactura.setString(1, factura.getClaveAcceso());
+            pstmtFactura.setString(2, factura.getNumeroFactura());
+            pstmtFactura.setObject(3, factura.getFechaEmision());
+            pstmtFactura.setInt(4, factura.getIdCliente());
+            pstmtFactura.setDouble(5, factura.getTotal());
+            pstmtFactura.setDouble(6, factura.getSubtotal());
+            pstmtFactura.setDouble(7, factura.getIva());
+            pstmtFactura.setString(8, factura.getEstado());
+            pstmtFactura.setString(9, factura.getAmbiente());
+            pstmtFactura.setString(10, factura.getTipoEmision());
+            pstmtFactura.executeUpdate();
+
+            // Obtener ID de la factura generada
+            int idFactura = -1;
+            try (var rs = pstmtFactura.getGeneratedKeys()) {
+                if (rs.next()) {
+                    idFactura = rs.getInt(1);
+                }
             }
-            
-            // Insertar detalles
-            String sqlDetalle = "INSERT INTO DetallesFactura (IdFactura, IdProducto, Cantidad, " +
-                              "PrecioUnitario, Subtotal, IVA, Total) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            
-            pstmt = con.prepareStatement(sqlDetalle);
+
+            if (idFactura == -1) {
+                throw new SQLException("Error al obtener el ID de la factura generada");
+            }
+
+            // Guardar detalles de la factura
+            pstmtDetalle = conn.prepareStatement(sqlDetalle);
             for (DetalleFactura detalle : factura.getDetalles()) {
-                pstmt.setInt(1, facturaId);
-                pstmt.setInt(2, detalle.getIdProducto());
-                pstmt.setInt(3, detalle.getCantidad());
-                pstmt.setDouble(4, detalle.getPrecioUnitario());
-                pstmt.setDouble(5, detalle.getSubtotal());
-                pstmt.setDouble(6, detalle.getIva());
-                pstmt.setDouble(7, detalle.getTotal());
-                pstmt.executeUpdate();
+                pstmtDetalle.setInt(1, idFactura);
+                pstmtDetalle.setInt(2, detalle.getIdProducto());
+                pstmtDetalle.setInt(3, detalle.getCantidad());
+                pstmtDetalle.setDouble(4, detalle.getPrecioUnitario());
+                pstmtDetalle.setDouble(5, detalle.getSubtotal());
+                pstmtDetalle.setDouble(6, detalle.getIva());
+                pstmtDetalle.setDouble(7, detalle.getTotal());
+                pstmtDetalle.addBatch();
             }
-            
-            con.commit();
+            pstmtDetalle.executeBatch();
+
+            conn.commit();
             return true;
-            
         } catch (SQLException e) {
-            try {
-                if (con != null) con.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
             e.printStackTrace();
             return false;
         } finally {
-            try {
-                if (generatedKeys != null) generatedKeys.close();
-                if (pstmt != null) pstmt.close();
-                if (con != null) con.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (pstmtFactura != null) {
+                try {
+                    pstmtFactura.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmtDetalle != null) {
+                try {
+                    pstmtDetalle.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

@@ -34,7 +34,7 @@ public class ClaveAccesoGenerator {
         return claveAcceso + digitoVerificador;
     }
 
-    private static int obtenerSecuencial() {
+    public static int obtenerSecuencial() {
         int secuencial = 1;
         String sql = "SELECT Secuencial FROM Secuenciales WHERE TipoDocumento = '01' AND IDPuntoEmision = (SELECT ID FROM PuntosEmision WHERE Codigo = '001')";
         try (Connection conn = Database.getConnection();
@@ -83,4 +83,4 @@ public class ClaveAccesoGenerator {
 
         return digitoVerificador;
     }
-}
+}   
