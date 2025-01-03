@@ -102,6 +102,7 @@ public class Producto {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+        calcularTotal();
     }
 
     // Método para calcular el total basado en la cantidad y el precio

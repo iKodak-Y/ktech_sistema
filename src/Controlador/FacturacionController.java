@@ -113,24 +113,28 @@ public class FacturacionController implements Initializable {
         listaProductos.setPrefHeight(100);
         listaProductos.setVisible(false);
 
-        // Configurar el listener para actualizar la lista mientras se escribe
         txtBuscarProducto.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.trim().isEmpty()) {
                 listaProductos.setVisible(false);
             } else {
                 List<Producto> productos = productoDAO.buscarPorCodigoONombre(newValue);
-                ObservableList<String> items = FXCollections.observableArrayList();
-                for (Producto producto : productos) {
-                    items.add(String.format("%s - %s", producto.getCodigo(), producto.getNombre()));
+                System.out.println("Productos encontrados: " + productos); // Validar el DAO
+                if (productos != null && !productos.isEmpty()) {
+                    ObservableList<String> items = FXCollections.observableArrayList();
+                    for (Producto producto : productos) {
+                        items.add(producto.toString());
+                    }
+                    listaProductos.setItems(items);
+                    listaProductos.setVisible(true);
+                } else {
+                    listaProductos.setVisible(false);
                 }
-                listaProductos.setItems(items);
-                listaProductos.setVisible(!items.isEmpty());
             }
         });
 
-        // Configurar la selección de producto
         listaProductos.setOnMouseClicked(event -> {
             String seleccion = listaProductos.getSelectionModel().getSelectedItem();
+            System.out.println("Seleccionado: " + seleccion); // Confirmar interacción
             if (seleccion != null) {
                 String codigo = seleccion.split(" - ")[0];
                 Producto producto = productoDAO.buscarPorCodigo(codigo);
@@ -138,9 +142,12 @@ public class FacturacionController implements Initializable {
                     mostrarDialogoCantidad(producto);
                     listaProductos.setVisible(false);
                     txtBuscarProducto.clear();
+                } else {
+                    System.out.println("Producto no encontrado por código: " + codigo);
                 }
             }
         });
+
     }
 
     @FXML
@@ -151,16 +158,33 @@ public class FacturacionController implements Initializable {
             if (cliente != null) {
                 clienteSeleccionado = cliente;
                 // Mostrar información del cliente
-                lblInfoCliente.setText(String.format("%s %s - %s", 
-                    cliente.getNombre(), 
-                    cliente.getApellido(), 
-                    cliente.getCedulaRUC()));
+                lblInfoCliente.setText(String.format("%s %s - %s",
+                        cliente.getNombre(),
+                        cliente.getApellido(),
+                        cliente.getCedulaRUC()));
                 lblInfoCliente.setVisible(true);
             } else {
                 mostrarError("Error", "Cliente no encontrado");
                 clienteSeleccionado = null;
                 lblInfoCliente.setVisible(false);
             }
+        }
+    }
+
+    @FXML
+    private void buscarProducto() {
+        String termino = txtBuscarProducto.getText().trim();
+        if (!termino.isEmpty()) {
+            List<Producto> productos = productoDAO.buscarPorCodigoONombre(termino);
+            System.out.println("Productos encontrados: " + productos); // Verificar resultados
+            ObservableList<String> items = FXCollections.observableArrayList();
+            for (Producto producto : productos) {
+                items.add(String.format("%s - %s", producto.getCodigo(), producto.getNombre()));
+            }
+            listaProductos.setItems(items);
+            listaProductos.setVisible(!items.isEmpty());
+        } else {
+            System.out.println("El término de búsqueda está vacío.");
         }
     }
 
@@ -178,7 +202,7 @@ public class FacturacionController implements Initializable {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
-        
+
         TextField cantidadField = new TextField("1");
         TextField precioField = new TextField(String.format("%.2f", producto.getPvp()));
 
@@ -199,7 +223,7 @@ public class FacturacionController implements Initializable {
                         return new Pair<>(cantidad, precio);
                     }
                 } catch (NumberFormatException e) {
-                    // Error de conversión
+                    mostrarError("Datos inválidos", "Ingrese valores numéricos válidos.");
                 }
             }
             return null;
@@ -365,5 +389,6 @@ public class FacturacionController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+
     }
 }

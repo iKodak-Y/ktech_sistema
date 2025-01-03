@@ -1,111 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 <?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.FacturacionController">
+<AnchorPane prefHeight="725.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.FacturacionController">
     <children>
         <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <padding>
-                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
-            
+
             <!-- Título -->
-            <Label text="Facturación" styleClass="title-label">
+            <Label styleClass="title-label" text="Facturación">
                 <font>
-                    <Font name="System Bold" size="24.0"/>
+                    <Font name="System Bold" size="24.0" />
                 </font>
             </Label>
-            
+
             <!-- Sección Cliente -->
             <GridPane hgap="10.0" vgap="5.0">
                 <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
-                    <ColumnConstraints hgrow="SOMETIMES"/>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" />
                 </columnConstraints>
                 <rowConstraints>
-                    <RowConstraints minHeight="30.0" prefHeight="30.0"/>
+                    <RowConstraints minHeight="30.0" prefHeight="30.0" />
+               <RowConstraints />
                 </rowConstraints>
                 <children>
-                    <Label text="Cliente:"/>
-                    <TextField fx:id="txtCliente" promptText="Ingrese cédula/RUC o nombre" GridPane.columnIndex="1"/>
-                    <Button onAction="#buscarCliente" text="Buscar Cliente" GridPane.columnIndex="2"/>
-                    <Label fx:id="lblInfoCliente" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #2196F3;"/>
+                    <Label text="Cliente:" />
+                    <TextField fx:id="txtCliente" promptText="Ingrese cédula/RUC o nombre" GridPane.columnIndex="1" />
+                    <Button onAction="#buscarCliente" text="Buscar Cliente" GridPane.columnIndex="2" />
+                    <Label fx:id="lblInfoCliente" style="-fx-font-weight: bold; -fx-text-fill: #2196F3;" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 </children>
             </GridPane>
-            
+
             <!-- Sección Productos -->
             <VBox spacing="10.0">
                 <GridPane hgap="10.0" vgap="5.0">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES"/>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="30.0" prefHeight="30.0"/>
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" />
                     </rowConstraints>
                     <children>
-                        <Label text="Producto:"/>
-                        <TextField fx:id="txtBuscarProducto" promptText="Ingrese código o nombre del producto" GridPane.columnIndex="1"/>
-                        <Button onAction="#buscarProducto" text="Agregar Producto" GridPane.columnIndex="2"/>
+                        <Label text="Producto:" />
+                        <TextField fx:id="txtBuscarProducto" promptText="Ingrese código o nombre del producto" GridPane.columnIndex="1" />
+                        <Button onAction="#buscarProducto" text="Agregar Producto" GridPane.columnIndex="2" />
                     </children>
                 </GridPane>
-                <ListView fx:id="listaProductos" prefHeight="100.0" visible="false"/>
+                <ListView fx:id="listaProductos" prefHeight="150.0" />
             </VBox>
-            
+
             <!-- Tabla de Detalles -->
             <TableView fx:id="tblDetalles" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="colCodigo" text="Código" prefWidth="100.0"/>
-                    <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="200.0"/>
-                    <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="80.0"/>
-                    <TableColumn fx:id="colPrecio" text="Precio Unit." prefWidth="100.0"/>
-                    <TableColumn fx:id="colSubtotal" text="Subtotal" prefWidth="100.0"/>
-                    <TableColumn fx:id="colIVA" text="IVA" prefWidth="80.0"/>
-                    <TableColumn fx:id="colTotal" text="Total" prefWidth="100.0"/>
+                    <TableColumn fx:id="colCodigo" prefWidth="100.0" text="Código" />
+                    <TableColumn fx:id="colDescripcion" prefWidth="200.0" text="Descripción" />
+                    <TableColumn fx:id="colCantidad" prefWidth="80.0" text="Cantidad" />
+                    <TableColumn fx:id="colPrecio" prefWidth="100.0" text="Precio Unit." />
+                    <TableColumn fx:id="colSubtotal" prefWidth="100.0" text="Subtotal" />
+                    <TableColumn fx:id="colIVA" prefWidth="80.0" text="IVA" />
+                    <TableColumn fx:id="colTotal" prefWidth="100.0" text="Total" />
                 </columns>
             </TableView>
-            
+
             <!-- Sección Totales -->
-            <GridPane hgap="10.0" vgap="5.0" alignment="CENTER_RIGHT">
+            <GridPane alignment="CENTER_RIGHT" hgap="10.0" vgap="5.0">
                 <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" />
                 </columnConstraints>
                 <rowConstraints>
-                    <RowConstraints minHeight="25.0" prefHeight="25.0"/>
-                    <RowConstraints minHeight="25.0" prefHeight="25.0"/>
-                    <RowConstraints minHeight="25.0" prefHeight="25.0"/>
+                    <RowConstraints minHeight="25.0" prefHeight="25.0" />
+                    <RowConstraints minHeight="25.0" prefHeight="25.0" />
+                    <RowConstraints minHeight="25.0" prefHeight="25.0" />
                 </rowConstraints>
                 <children>
-                    <Label text="Subtotal:" GridPane.rowIndex="0"/>
-                    <Label fx:id="lblSubtotal" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                    <Label text="IVA:" GridPane.rowIndex="1"/>
-                    <Label fx:id="lblIVA" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                    <Label text="Total:" GridPane.rowIndex="2"/>
-                    <Label fx:id="lblTotal" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    <Label text="Subtotal:" GridPane.rowIndex="0" />
+                    <Label fx:id="lblSubtotal" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <Label text="IVA:" GridPane.rowIndex="1" />
+                    <Label fx:id="lblIVA" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Label text="Total:" GridPane.rowIndex="2" />
+                    <Label fx:id="lblTotal" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 </children>
             </GridPane>
-            
-            <!-- Botones de Acción -->
-            <HBox spacing="10.0" alignment="CENTER_RIGHT">
-                <Button onAction="#emitirFactura" text="Emitir Factura" styleClass="button-primary">
+
+            <!-- Botones -->
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                <Button onAction="#emitirFactura" styleClass="button-primary" text="Emitir Factura">
                     <font>
-                        <Font name="System Bold" size="14.0"/>
+                        <Font name="System Bold" size="14.0" />
                     </font>
                 </Button>
-                <Button onAction="#cancelar" text="Cancelar"/>
-                <Button onAction="#cerrar" text="Cerrar"/>
+                <Button onAction="#cancelar" text="Cancelar" />
+                <Button onAction="#cerrar" text="Cerrar" />
             </HBox>
         </VBox>
-    </children>
-    
+    </children>    
     <stylesheets>
-        <URL value="@../styles/styles.css"/>
+        <URL value="@../styles/styles.css" />
     </stylesheets>
 </AnchorPane>

@@ -136,20 +136,15 @@ public class ProductoDAO {
                     producto.setId(rs.getInt("IDProducto"));
                     producto.setCodigo(rs.getString("Codigo"));
                     producto.setNombre(rs.getString("Nombre"));
-                    producto.setPrecio(rs.getDouble("Precio"));
                     producto.setPvp(rs.getDouble("PVP"));
-                    producto.setStockInicial(rs.getInt("StockInicial"));
-                    producto.setStockActual(rs.getInt("StockActual"));
-                    producto.setIva(rs.getDouble("IVA"));
-                    producto.setEstado(rs.getString("Estado"));
-                    producto.setIdCategoria(rs.getInt("IDCategoria"));
+                    // Otros campos...
                     productos.add(producto);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        System.out.println("Productos devueltos por el DAO: " + productos);
         return productos;
     }
 
